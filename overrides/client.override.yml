@@ -1,0 +1,45 @@
+# Testing-bundle changes to the clients. clients/*/docker-compose.base.yml is the unmodified output of
+# 'flnet client init' (init_test_bundle.py), clients/*/docker-compose.yml (overrides/client.compose.yml)
+# merges this file into it. Lists (environment, volumes) are merged by key/target.
+# Relative paths are resolved from the client directory (clients/<name>/).
+services:
+  orch-api:
+    image: ${ORCH_API_IMAGE}
+    environment:
+      # the host docker daemon pulls the tools: localhost, flnet sets the platform address host.docker.internal
+      - ORCH_DOCKER__PRIVATE__REGISTRY_URL=localhost:8250
+
+  local-learning-api:
+    image: ${LOCAL_LEARNING_API_IMAGE}
+    environment:
+      # the platform runs on this machine: host.docker.internal:8250, GLOBAL_FEDERATION_HOST has no port
+      - FLNET_GLOBAL_SOCKET_URI=${GLOBAL_WS_PROTOCOL}://${GLOBAL_DOMAIN}/api
+      # Creates the US-130 cohort on startup, imports the connector and runs it with this client's CSV
+      # (TESTING_CLINIC_CSV in .env), see AutoSubscriberBO. Dotted names, as the group key (us-130) can't be
+      # expressed in the upper-case env var form. The schema is imported by the platform's datamodeler
+      # (id = root id of its 2026-04us130_diabetes_schema.json); until it exists the client retries.
+      - flnet.auto-subscribe.enabled=true
+      # the platform starts together with the clients: give its datamodeler time to finish the schema
+      # imports, otherwise a client can subscribe to a half-imported schema
+      - flnet.auto-subscribe.delay=PT1M
+      - flnet.auto-subscribe.us-130.global-schema-id=c4877033-3619-47c2-bf7d-37f48a2934b3
+      - flnet.auto-subscribe.us-130.cohort-name=US 130 Schema
+      - flnet.auto-subscribe.us-130.connector-path=/testing-data/us-130_connector.json
+      - flnet.auto-subscribe.us-130.etl-data-path=/testing-data/${TESTING_CLINIC_CSV}
+      - flnet.auto-subscribe.us-130.add-for-user=test
+    volumes:
+      - ../../import_data_handling:/testing-data:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  instance-manager-frontend:
+    image: ${LOCAL_FRONTEND_IMAGE}
+
+  controller:
+    image: ${CONTROLLER_IMAGE}
+    environment:
+      # the platform relay uses a self-signed certificate (overrides/platform.override.yml)
+      - RELAY_TLS_MODE=self-signed
+      - RELAY_MODE=dev
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

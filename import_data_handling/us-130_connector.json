@@ -1,0 +1,446 @@
+{
+  "id": 3,
+  "version": 1,
+  "createdAt": "2026-04-15T09:33:04Z",
+  "updatedAt": "2026-04-15T09:38:08Z",
+  "name": "TestUs1302",
+  "description": "",
+  "inputConfig": {
+    "mode": "FILE",
+    "fileType": "CSV",
+    "delimiter": ",",
+    "mergeType": null,
+    "extractSheets": null,
+    "fileId": 2,
+    "hasSupportFile": false,
+    "customDelimiter": null,
+    "hasHeader": true,
+    "specificSheets": null,
+    "firstSheetOnly": true,
+    "fileExists": true,
+    "filePath": ""
+  },
+  "transformer": [
+    {
+      "moduleName": "builtin",
+      "methodName": "Replace Value",
+      "parameters": [],
+      "returnKeys": [],
+      "column": "race,weight,payer_code,medical_specialty",
+      "onRow": false,
+      "inputMapping": {
+        "search": "[VALUE]?",
+        "replace": "[VALUE]null"
+      },
+      "returnMapping": {},
+      "description": "",
+      "appVersionId": null,
+      "appImage": null,
+      "hyperparams": {}
+    }
+  ],
+  "schemaMapping": [
+    {
+      "column": "encounter_id",
+      "mapping": "Encounter.Encounter ID",
+      "schemaId": 61,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "patient_nbr",
+      "mapping": "Unique Patient ID",
+      "schemaId": null,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "race",
+      "mapping": "Demographics.Race",
+      "schemaId": 102,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "gender",
+      "mapping": "Demographics.Gender",
+      "schemaId": 104,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "age",
+      "mapping": "Demographics.Age",
+      "schemaId": 101,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "weight",
+      "mapping": "Demographics.Weight",
+      "schemaId": 103,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "admission_type_id",
+      "mapping": "Encounter.Admission Type",
+      "schemaId": 58,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "discharge_disposition_id",
+      "mapping": "Encounter.Discharge Disposition",
+      "schemaId": 59,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "admission_source_id",
+      "mapping": "Encounter.Admission Source",
+      "schemaId": 62,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "time_in_hospital",
+      "mapping": "Encounter.Time in Hospital",
+      "schemaId": 56,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "payer_code",
+      "mapping": "Encounter.Payer Code",
+      "schemaId": 57,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "medical_specialty",
+      "mapping": "Encounter.Medical Specialty",
+      "schemaId": 60,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "num_lab_procedures",
+      "mapping": "Clinical Counts.Num Lab Procedures",
+      "schemaId": 94,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "num_procedures",
+      "mapping": "Clinical Counts.Num Procedures",
+      "schemaId": 98,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "num_medications",
+      "mapping": "Clinical Counts.Num Medications",
+      "schemaId": 97,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "number_outpatient",
+      "mapping": "Clinical Counts.Number Outpatient",
+      "schemaId": 96,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "number_emergency",
+      "mapping": "Clinical Counts.Number Emergency",
+      "schemaId": 95,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "number_inpatient",
+      "mapping": "Clinical Counts.Number Inpatient",
+      "schemaId": 99,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "diag_1",
+      "mapping": "Diagnoses.Diag 1",
+      "schemaId": 66,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "diag_2",
+      "mapping": "Diagnoses.Diag 2",
+      "schemaId": 67,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "diag_3",
+      "mapping": "Diagnoses.Diag 3",
+      "schemaId": 65,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "number_diagnoses",
+      "mapping": "Clinical Counts.Number Diagnoses",
+      "schemaId": 93,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "max_glu_serum",
+      "mapping": "Lab Results.Max Glu Serum",
+      "schemaId": 50,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "A1Cresult",
+      "mapping": "Lab Results.A1C Result",
+      "schemaId": 49,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "metformin",
+      "mapping": "Medication.Metformin",
+      "schemaId": 87,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "repaglinide",
+      "mapping": "Medication.Repaglinide",
+      "schemaId": 91,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "nateglinide",
+      "mapping": "Medication.Nateglinide",
+      "schemaId": 84,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "chlorpropamide",
+      "mapping": "Medication.Chlorpropamide",
+      "schemaId": 86,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "glimepiride",
+      "mapping": "Medication.Glimepiride",
+      "schemaId": 79,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "acetohexamide",
+      "mapping": "Medication.Acetohexamide",
+      "schemaId": 82,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "glipizide",
+      "mapping": "Medication.Glipizide",
+      "schemaId": 81,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "glyburide",
+      "mapping": "Medication.Glyburide",
+      "schemaId": 73,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "tolbutamide",
+      "mapping": "Medication.Tolbutamide",
+      "schemaId": 80,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "pioglitazone",
+      "mapping": "Medication.Pioglitazone",
+      "schemaId": 83,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "rosiglitazone",
+      "mapping": "Medication.Rosiglitazone",
+      "schemaId": 89,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "acarbose",
+      "mapping": "Medication.Acarbose",
+      "schemaId": 85,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "miglitol",
+      "mapping": "Medication.Miglitol",
+      "schemaId": 90,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "troglitazone",
+      "mapping": "Medication.Troglitazone",
+      "schemaId": 77,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "tolazamide",
+      "mapping": "Medication.Tolazamide",
+      "schemaId": 72,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "examide",
+      "mapping": "Medication.Examide",
+      "schemaId": 88,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "citoglipton",
+      "mapping": "Medication.Citoglipton",
+      "schemaId": 69,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "insulin",
+      "mapping": "Medication.Insulin",
+      "schemaId": 76,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "glyburide-metformin",
+      "mapping": "Medication.Glyburide-Metformin",
+      "schemaId": 71,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "glipizide-metformin",
+      "mapping": "Medication.Glipizide-Metformin",
+      "schemaId": 78,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "glimepiride-pioglitazone",
+      "mapping": "Medication.Glimepiride-Pioglitazone",
+      "schemaId": 75,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "metformin-rosiglitazone",
+      "mapping": "Medication.Metformin-Rosiglitazone",
+      "schemaId": 70,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "metformin-pioglitazone",
+      "mapping": "Medication.Metformin-Pioglitazone",
+      "schemaId": 74,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "change",
+      "mapping": "Outcome.Change",
+      "schemaId": 53,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "diabetesMed",
+      "mapping": "Outcome.Diabetes Med",
+      "schemaId": 54,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    },
+    {
+      "column": "readmitted",
+      "mapping": "Outcome.Readmitted",
+      "schemaId": 52,
+      "visitTimestampMapping": null,
+      "visitIdMapping": null,
+      "timestampFormat": null
+    }
+  ],
+  "mergeConfig": null
+}
+

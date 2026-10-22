@@ -1,0 +1,74 @@
+# Testing-bundle changes to the platform. platforms/test/docker-compose.base.yml is the unmodified output of
+# 'flnet platform init' (init_test_bundle.py), platforms/test/docker-compose.yml (overrides/platform.compose.yml)
+# merges this file into it. Lists (environment, volumes, ports) are merged by key/target.
+services:
+  datamodeler-api:
+    image: ${DATAMODELER_API_IMAGE}
+    environment:
+      # import the ontologies, datatypes and schemas built into the image (US-130 schema for the clients)
+      - FLNET_ONTOLOGY_IMPORTS_ENABLED=true
+      - FLNET_DATATYPE_IMPORTS_ENABLED=true
+      - FLNET_SCHEMA_IMPORTS_ENABLED=true
+      # the bundle ships no UMLS files (platforms/test/umls/ is empty)
+      - UMLS_AUTO_IMPORT_ENABLED=false
+
+  datamodeler-db:
+    ports:
+      # Just for debugging, password at platforms/test/env/datamodeler-secrets.env
+      - 7687:7687
+      - 7474:7474
+
+  global-learning-api:
+    image: ${GLOBAL_LEARNING_API_IMAGE}
+    environment:
+      # the second origin is the address the client containers use for the websocket
+      - QUARKUS_HTTP_CORS_ORIGINS=${DEPLOYED_ON_DOMAIN},http://host.docker.internal:8250
+      - FLNET_PIPELINE_BUILDER_IMAGE=${PIPELINE_BUILDER_IMAGE:-ghcr.io/fedlearnnet/tool-build-pipeline/pipeline:latest}
+      - FLNET_OBSERVER_ENABLED=true
+      - FLNET_ONTOLOGY_IMPORTS_CREATE_EMBEDDINGS=false
+
+  orch-api:
+    image: ${ORCH_API_IMAGE}
+    environment:
+      - QUARKUS_REST_CLIENT_DOCKER_REGISTRY_URL=http://registry:5000
+      # the registry is reached as localhost, which a buildx builder container cannot resolve to the host;
+      # without buildx the image is pushed through the host docker daemon
+      # -> localhost:port reaches the registry deployed here
+      - PIPELINE_USE_BUILDX=false
+
+  controller:
+    image: ${CONTROLLER_IMAGE}
+
+  relay-server:
+    image: ${RELAY_SERVER_IMAGE}
+    # Self-signed certificate for host.docker.internal instead of the platform's SSL certificate
+    environment:
+      - RELAY_DOMAIN=host.docker.internal
+      - RELAY_TLS_MODE=self-signed
+      - RELAY_MODE=dev
+      # empty = the relay generates its certificate at its default location; a set path must exist
+      - RELAY_PUBLIC_CERT_PATH=
+      - RELAY_PRIVATE_KEY_PATH=
+    # the certificate files of the platform are not needed
+    volumes: !reset []
+
+  frontend:
+    image: ${GLOBAL_FRONTEND_IMAGE}
+
+  keycloak:
+    environment:
+      # workaround so the clients can access via host.docker.internal
+      - KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
+
+  # nginx template without the registry auth, see overrides/platform.nginx.conf
+  reverse-proxy-unencrypted:
+    # flnet binds a localhost platform to 127.0.0.1 only, but the client containers come in via
+    # host.docker.internal (host-gateway), which needs all interfaces
+    ports: !override
+      - "0.0.0.0:8250:80"
+    volumes:
+      - ../../overrides/platform.nginx.conf:/etc/nginx/templates/server.conf.template:ro
+
+  reverse-proxy-encrypted:
+    volumes:
+      - ../../overrides/platform.nginx.conf:/etc/nginx/templates/server.conf.template:ro

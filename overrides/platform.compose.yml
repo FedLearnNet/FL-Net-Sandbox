@@ -1,0 +1,12 @@
+# Copied as platforms/test/docker-compose.yml by init_test_bundle.py. docker-compose.base.yml next to it is the
+# unmodified output of 'flnet platform init'; this wrapper merges the testing-bundle changes
+# (overrides/platform.override.yml) into it and adds the shared overrides/images_used.env, so plain
+# `docker compose ...` commands work in the deployment directory without --env-file.
+# Relative paths (also in the override) are resolved from the deployment directory.
+include:
+  - path:
+      - docker-compose.base.yml
+      - ../../overrides/platform.override.yml
+    env_file:
+      - .env
+      - ../../overrides/images_used.env

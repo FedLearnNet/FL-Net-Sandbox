@@ -1,0 +1,100 @@
+# OpenSSL configuration for generating a self-signed certificate with Subject Alternative Names (SAN).
+#
+# USAGE:
+#   Automated: Run create_self_signed_certs_config.py (in the repo root) to fill in the TODO fields interactively,
+#              then run create_self_signed_certs.sh to generate the certificate and key.
+#   Manual:    Edit this file directly (just need to replace TODO placeholders), save it as san.cnf,
+#              then run create_self_signed_certs.sh
+#
+# CERTIFICATE SETTINGS:
+#   default_bits = 4096          (RSA key size in bits; larger = more secure but slower)
+#   default_md = sha384          (Hash algorithm; sha256, sha384, sha512 all acceptable)
+
+[req]
+default_bits       = 4096
+prompt             = no
+default_md         = sha384
+distinguished_name = dn
+x509_extensions    = v3_ca
+
+[dn]
+# Distinguished Name (DN) fields — identifies who the certificate is issued to
+# Most fields are OPTIONAL for self-signed certs; only CN is required.
+# Leave empty fields blank or use '.' (dot) as a placeholder.
+
+# C: Country code (OPTIONAL)
+#   ISO 3166-1 alpha-2 code (2 letters, e.g. DE, US, AT, GB, FR)
+#   Leave blank to omit
+C  = TODO_COUNTRY_CODE
+
+# ST: State or Province (OPTIONAL)
+#   Full name, not abbreviated (e.g. Bavaria, California, Ontario)
+#   Leave blank to omit
+ST = TODO_STATE_OR_PROVINCE
+
+# L: Locality / City (OPTIONAL)
+#   City or locality name (e.g. Munich, New York, Toronto)
+#   Leave blank to omit
+L  = TODO_CITY
+
+# O: Organization (OPTIONAL)
+#   Company, hospital, institution name (e.g. My Hospital GmbH)
+#   Leave blank to omit
+O  = TODO_ORGANIZATION
+
+# OU: Organizational Unit (OPTIONAL)
+#   Department or division (e.g. IT Department, Research Lab)
+#   Leave blank to omit
+OU = TODO_ORGANIZATIONAL_UNIT
+
+# CN: Common Name (REQUIRED)
+#   Primary hostname or IP address this certificate is issued for
+#   Examples: myserver.example.com, myserver (intranet), 192.168.1.100
+#   Modern browsers prefer matching SANs (see [alt_names] section below)
+CN = TODO_COMMON_NAME
+
+[v3_ca]
+# X.509 v3 extensions — defines what this certificate can be used for
+basicConstraints   = CA:FALSE
+keyUsage           = digitalSignature, keyEncipherment
+extendedKeyUsage   = serverAuth
+subjectAltName     = @alt_names
+
+[alt_names]
+# Subject Alternative Names (SANs) — list of hostnames and/or IP addresses
+# this certificate is valid for. Modern browsers REQUIRE SANs; the CN alone is insufficient.
+#
+# FORMAT:
+#   DNS.1 = hostname1.example.com    (hostnames/FQDNs)
+#   DNS.2 = hostname2.example.com
+#   DNS.3 = shortname               (works for intranet/local hostnames)
+#   IP.1  = 192.168.1.100           (IPv4 addresses)
+#   IP.2  = 2001:db8::1             (IPv6 addresses, if needed)
+#
+# AT LEAST ONE entry (DNS or IP) is required.
+# Add or remove lines as needed for your setup.
+#
+# EXAMPLES:
+#   For hostname + backup hostname:
+#     DNS.1 = myserver.example.com
+#     DNS.2 = myserver-backup.example.com
+#
+#   For intranet-only (short hostname):
+#     DNS.1 = myserver
+#     DNS.2 = myserver.local
+#
+#   For IP-only access:
+#     IP.1 = 192.168.1.100
+#
+#   For hostname + IP (most flexible):
+#     DNS.1 = myserver.example.com
+#     IP.1  = 192.168.1.100
+
+# Primary hostname (replace TODO_PRIMARY_HOSTNAME with your hostname/IP)
+DNS.1 = TODO_PRIMARY_HOSTNAME
+
+# Additional hostname(s) — delete if not needed
+# DNS.2 = TODO_ADDITIONAL_HOSTNAME
+
+# IP address — delete if not needed (useful for direct IP access without DNS)
+# IP.1  = TODO_IP_ADDRESS
