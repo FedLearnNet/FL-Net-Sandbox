@@ -15,6 +15,7 @@ Wait a few minutes until the example Tool, the Schemas and the cohorts of the cl
 # Intended Flow (Shell scripts so automatic)
 ## Prerequisites
 - Docker and Docker Compose, Python 3 and curl on your machine.
+- [Git LFS](https://git-lfs.com/) installed (`git lfs install`) before cloning: the SapBERT model `data/sapbert/sapbert.onnx` is stored with Git LFS. If you cloned without it, run `git lfs pull` in this directory afterwards, otherwise the file is only a small pointer file.
 - Build the docker image for each service you changed. The building depends on the repo, helepr scripts may be available.
 **Important: You can give these images any name, but end their name with `:testingtag` or `:tmptag`, e.g. `locallearning:testingtag`. The `start_test_bundle.sh` script tries to pull any image without the these suffixes.**
 
