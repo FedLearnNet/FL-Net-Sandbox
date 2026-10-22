@@ -1,18 +1,20 @@
 # Purpose
 These deployments are intended for testing out a complete FL-Net Network on one single machine.
-- If you're a developer and want to end-to-end test before contributing any bigger code chances
+- If you're a developer and want to end-to-end test before contributing any bigger code changes
 - If you're interested in FL-Net and want to try it out with dummy data and full admin access
 
 # Quickstart
 If you just want to try it out with default settings:
 ```bash
-python3 init_test_bundle.py
+python3 init_test_bundle.py # just needs python3, no non stdlib packages required
 sh start_test_bundle.sh
 ```
-Then open the Platform UI at http://localhost:8250 and the two clients at http://localhost:8251 and http://127.0.0.1:8252. The Platform has the admin user `admin` with password `test`, the clients have the user `test` with password `test`. All Tools are owned by the admin user.
+Then open the Platform UI at http://localhost:8250 and the two clients at http://localhost:8251 and http://127.0.0.1:8252 (Do NOT use localhost for the second client or the authentication for that client won't work). The Platform has the admin user `admin` with password `test`, the clients have the user `test` with password `test`. All Tools are owned by the admin user.
 Wait a few minutes until the example Tool, the Schemas and the cohorts of the clients appear.
 
-# Intended Flow (Shell scripts so automatic)
+If you want to try out the federated learning, you can use the suggested [example FL workflow](#example-fl-workflow).
+
+# Intended developer Flow 
 ## Prerequisites
 - Docker and Docker Compose, Python 3 and curl on your machine.
 - [Git LFS](https://git-lfs.com/) installed (`git lfs install`) before cloning: the SapBERT model `data/sapbert/sapbert.onnx` is stored with Git LFS. If you cloned without it, run `git lfs pull` in this directory afterwards, otherwise the file is only a small pointer file.
