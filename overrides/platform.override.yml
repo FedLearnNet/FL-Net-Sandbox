@@ -38,6 +38,13 @@ services:
 
   controller:
     image: ${CONTROLLER_IMAGE}
+    # The platform's own controller (platform as aggregator) uses the self-signed sandbox relay like the clients
+    environment:
+      - RELAY_ADDRESS_TCP=host.docker.internal:9150
+      - RELAY_TLS_MODE=self-signed
+      - RELAY_MODE=dev
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   relay-server:
     image: ${RELAY_SERVER_IMAGE}
