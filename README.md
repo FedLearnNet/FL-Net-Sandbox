@@ -98,6 +98,24 @@ The following FL project is used for testing and should work. If your changes br
 - Add the US130-Hospital Readmission Federated NN Tool and connect the `csv input-data` into that Tool. Make sure to click on the gear icon of the tool to save the hyperparameters (the default ones work).
 *Make sure to click the save button!*
 
+### Testing changes to the Tool API
+Please try to avoid changing the Tool API if possible.
+However, if required, you can test your changes like this:
+1. Build a wheel of your Tool API checkout (`pip wheel --no-deps -w <dir> .`) and build the
+   `base-python-dep` image from `docker/Dockerfile.base-chainguard` with `--build-arg PYFEDAPPWRAP_WITH_DEPS=1`,
+   replacing its `pip install "FL-Net-Python-Tool-API==..."` with an install of that wheel.
+   The Dockerfile installs from PyPI, so building it unchanged does not contain your changes.
+   Tag the image locally only (e.g. `base-python-dep:testingtag`) and never push it.
+2. Clone the [US-130 Tool repo](https://github.com/FedLearnNet/FL-Net-Tool-US-130-FL-NN) and change the `FROM` of its `Dockerfile` to your image.
+3. Wait until the Platform has imported and built the Tool, then build the Tool image and push it to the sandbox
+   registry under exactly the same name, e.g. `localhost:8250/tools/us130-hospital-readmission-federated-nn:<commit>`
+   (see `curl localhost:8250/v2/_catalog` or the "Setting image name" log line of the `global-learning-api`).
+   Pushing requires the pipeline credentials: `REGISTRY_PUSH_BASIC_AUTH` in `platforms/test/env/registry-secrets.env`
+   which is base64 of `pipeline:<password>`, use it with `docker login localhost:8250 -u pipeline`.
+   The Platform and the clients pull the image on every run, so no restart is needed. A rebuild of the Tool by the
+   Platform (e.g. after `init_test_bundle.py`) overwrites it, so push again afterwards.
+
+
 # Disclaimer
 This testing bundle uses third-party data and models only for testing purposes. All credit goes to their original authors. The bundle is not affiliated with or endorsed by them.
 
