@@ -99,21 +99,31 @@ The following FL project is used for testing and should work. If your changes br
 *Make sure to click the save button!*
 
 ### Testing changes to the Tool API
-Please try to avoid changing the Tool API if possible.
-However, if required, you can test your changes like this:
-1. Build a wheel of your Tool API checkout (`pip wheel --no-deps -w <dir> .`) and build the
-   `base-python-dep` image from `docker/Dockerfile.base-chainguard` with `--build-arg PYFEDAPPWRAP_WITH_DEPS=1`,
-   replacing its `pip install "FL-Net-Python-Tool-API==..."` with an install of that wheel.
-   The Dockerfile installs from PyPI, so building it unchanged does not contain your changes.
-   Tag the image locally only (e.g. `base-python-dep:testingtag`) and never push it.
-2. Clone the [US-130 Tool repo](https://github.com/FedLearnNet/FL-Net-Tool-US-130-FL-NN) and change the `FROM` of its `Dockerfile` to your image.
-3. Wait until the Platform has imported and built the Tool, then build the Tool image and push it to the sandbox
-   registry under exactly the same name, e.g. `localhost:8250/tools/us130-hospital-readmission-federated-nn:<commit>`
-   (see `curl localhost:8250/v2/_catalog` or the "Setting image name" log line of the `global-learning-api`).
-   Pushing requires the pipeline credentials: `REGISTRY_PUSH_BASIC_AUTH` in `platforms/test/env/registry-secrets.env`
-   which is base64 of `pipeline:<password>`, use it with `docker login localhost:8250 -u pipeline`.
-   The Platform and the clients pull the image on every run, so no restart is needed. A rebuild of the Tool by the
-   Platform (e.g. after `init_test_bundle.py`) overwrites it, so push again afterwards.
+Please try to avoid changing the Tool API (pyfedappwrap) if possible.
+If you have to, build a base image with your changes, build the Tool (here US-130) on top of it and replace the
+Tool image the Platform built in the sandbox registry. Run from this repo, with
+[Python-Tool-API](https://github.com/FedLearnNet/Python-Tool-API) and
+[FL-Net-Tool-US-130-FL-NN](https://github.com/FedLearnNet/FL-Net-Tool-US-130-FL-NN) cloned next to it:
+```bash
+# 1. Base image with your Tool API changes -> base-python-dep:testingtag
+sh ../Python-Tool-API/dev_scripts/build_local_docker_image.sh
+
+# 2. After the Platform built the Tool: its image name in the sandbox registry
+curl -s localhost:8250/v2/tools/us130-hospital-readmission-federated-nn/tags/list
+IMG=localhost:8250/tools/us130-hospital-readmission-federated-nn:<tag from above>
+
+# 3. Build the Tool on your base image under that name (FROM replaced on the fly, nothing to commit)
+sed 's#^FROM .*#FROM base-python-dep:testingtag#' ../FL-Net-Tool-US-130-FL-NN/Dockerfile \
+  | docker build -t "$IMG" -f - ../FL-Net-Tool-US-130-FL-NN
+
+# 4. Push it (pipeline credentials of the sandbox; REGISTRY_PUSH_BASIC_AUTH = base64 of pipeline:<password>)
+grep '^REGISTRY_PUSH_BASIC_AUTH=' platforms/test/env/registry-secrets.env | cut -d= -f2- \
+  | base64 -d | cut -d: -f2- | docker login localhost:8250 -u pipeline --password-stdin
+docker push "$IMG"
+```
+- The Platform and the clients pull the Tool image before every run, so no restart is needed after a push.
+- A rebuild of the Tool by the Platform (e.g. after `init_test_bundle.py`) overwrites the image, so push again afterwards.
+- Other Tools work the same way; `curl -s localhost:8250/v2/_catalog` lists their repositories.
 
 
 # Disclaimer
