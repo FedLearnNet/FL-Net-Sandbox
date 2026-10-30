@@ -100,30 +100,18 @@ The following FL project is used for testing and should work. If your changes br
 
 ### Testing changes to the Tool API
 Please try to avoid changing the Tool API (pyfedappwrap) if possible.
-If you have to, build a base image with your changes, build the Tool (here US-130) on top of it and replace the
-Tool image the Platform built in the sandbox registry. Run from this repo, with
-[Python-Tool-API](https://github.com/FedLearnNet/Python-Tool-API) and
-[FL-Net-Tool-US-130-FL-NN](https://github.com/FedLearnNet/FL-Net-Tool-US-130-FL-NN) cloned next to it:
+If you have to, make your changes in a clone of [Python-Tool-API](https://github.com/FedLearnNet/Python-Tool-API)
+next to this repo (folder `Python-Tool-API` or `local-global-tool-api`) and, after the Platform built the Tool, run:
 ```bash
-# 1. Base image with your Tool API changes -> base-python-dep:testingtag
-sh ../Python-Tool-API/dev_scripts/build_local_docker_image.sh
-
-# 2. After the Platform built the Tool: its image name in the sandbox registry
-curl -s localhost:8250/v2/tools/us130-hospital-readmission-federated-nn/tags/list
-IMG=localhost:8250/tools/us130-hospital-readmission-federated-nn:<tag from above>
-
-# 3. Build the Tool on your base image under that name (FROM replaced on the fly, nothing to commit)
-sed 's#^FROM .*#FROM base-python-dep:testingtag#' ../FL-Net-Tool-US-130-FL-NN/Dockerfile \
-  | docker build -t "$IMG" -f - ../FL-Net-Tool-US-130-FL-NN
-
-# 4. Push it (pipeline credentials of the sandbox; REGISTRY_PUSH_BASIC_AUTH = base64 of pipeline:<password>)
-grep '^REGISTRY_PUSH_BASIC_AUTH=' platforms/test/env/registry-secrets.env | cut -d= -f2- \
-  | base64 -d | cut -d: -f2- | docker login localhost:8250 -u pipeline --password-stdin
-docker push "$IMG"
+sh build_and_push_custom_toolapi.sh
 ```
+It builds a base image with your changes, builds the US-130 Tool on top of it (cloning
+[FL-Net-Tool-US-130-FL-NN](https://github.com/FedLearnNet/FL-Net-Tool-US-130-FL-NN) next to this repo if missing) and
+replaces the Tool image the Platform built in the sandbox registry. If the registry holds several tags of the Tool,
+pass the one to replace as argument.
 - The Platform and the clients pull the Tool image before every run, so no restart is needed after a push.
 - A rebuild of the Tool by the Platform (e.g. after `init_test_bundle.py`) overwrites the image, so push again afterwards.
-- Other Tools work the same way; `curl -s localhost:8250/v2/_catalog` lists their repositories.
+- The script only covers US-130. Other Tools work the same way, see the script; `curl -s localhost:8250/v2/_catalog` lists their repositories.
 
 
 # Disclaimer
