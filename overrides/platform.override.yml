@@ -26,6 +26,11 @@ services:
       - FLNET_PIPELINE_BUILDER_IMAGE=${PIPELINE_BUILDER_IMAGE:-ghcr.io/fedlearnnet/tool-build-pipeline/pipeline:latest}
       - FLNET_OBSERVER_ENABLED=true
       - FLNET_ONTOLOGY_IMPORTS_CREATE_EMBEDDINGS=false
+      # only import and build the federated US-130 tool (the other tool builds are slow or hang)
+      - FLNET_TOOL_IMPORTS_WHITELIST=us130-hospital-readmission-federated-nn.json
+      - FLNET_TOOL_IMPORTS_BUILD_ONLY=us130-hospital-readmission-federated-nn
+      # the bundled workflow needs the other tools
+      - FLNET_WORKFLOW_IMPORTS_ENABLED=false
 
   orch-api:
     image: ${ORCH_API_IMAGE}
